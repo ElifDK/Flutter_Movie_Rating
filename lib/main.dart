@@ -6,8 +6,29 @@ void main() {
   ));
 }
 
-class MovieRating extends StatelessWidget {
+class MovieRating extends StatefulWidget {
   const MovieRating({super.key});
+
+  @override
+  State<MovieRating> createState() => _MovieRatingState();
+}
+
+class _MovieRatingState extends State<MovieRating> {
+
+  int movieRating = 1;
+  bool isAdded = false;
+
+  void increaseRating () {
+    setState(() {
+      movieRating = (movieRating < 5 ? movieRating + 1 : 1);
+    });
+  }
+
+  void addRemove() {
+    setState(() {
+      isAdded = !isAdded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +56,10 @@ class MovieRating extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text('Rating', style: TextStyle(color:Colors.white, fontSize: 20),),
-                    Icon(Icons.star, color: Colors.amber,),
+                    for (int i = 0; i < movieRating; i++)
+                      Icon(Icons.star, color: Colors.amber,),
                     Spacer(),
-                    TextButton(onPressed: (){}, child: Text('+')),
+                    TextButton(onPressed: (){increaseRating();}, child: Text('+')),
                   ],
                 ),
               ),
@@ -46,12 +68,15 @@ class MovieRating extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(Icons.list_alt, color: Colors.amber,),
-                    Text('Added to your list', style: TextStyle(color:Colors.white, fontSize: 20),),
+                    if (isAdded)
+                      Icon(Icons.list_alt, color: Colors.amber,),
+                    if (isAdded)
+                      Text('Added to your list', style: TextStyle(color:Colors.white, fontSize: 20),),
                     Spacer(),
-                    TextButton(onPressed: (){}, child: Text('Remove')),
+                    TextButton(onPressed: (){addRemove();},
+                        child: (isAdded ? Text('Remove') : Text('Add to your list')),
 
-                  ],
+                    )],
                 ),
               ),
               Expanded(child: Image.asset('assets/img_2.png')),
